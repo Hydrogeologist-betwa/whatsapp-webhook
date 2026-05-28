@@ -1,9 +1,14 @@
 const express = require("express");
 
 const app = express();
+
 app.use(express.json());
 
 const VERIFY_TOKEN = "my_verify_token";
+
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
@@ -11,7 +16,7 @@ app.get("/webhook", (req, res) => {
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("Webhook verified!");
+    console.log("Webhook verified");
     return res.status(200).send(challenge);
   }
 
@@ -19,11 +24,7 @@ app.get("/webhook", (req, res) => {
 });
 
 app.post("/webhook", (req, res) => {
-  console.log(
-    "Incoming webhook:",
-    JSON.stringify(req.body, null, 2)
-  );
-
+  console.log(JSON.stringify(req.body, null, 2));
   res.sendStatus(200);
 });
 
